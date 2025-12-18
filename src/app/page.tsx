@@ -1,6 +1,6 @@
 "use client";
 import Header from "./_features/header";
-import { ImageAnalysis } from "./tabContent/imageAnalysis";
+import { ImageAnalysis } from "../app/tabContent/imageAnalysis";
 import { IngredientRecognition } from "./tabContent/ingredientRecognition";
 import { ImageCreator } from "./tabContent/imageCreator";
 import { useState } from "react";

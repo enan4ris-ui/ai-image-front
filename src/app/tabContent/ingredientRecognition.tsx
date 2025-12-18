@@ -25,7 +25,12 @@ export function IngredientRecognition() {
           </p>
           <div className="flex-col flex gap-2 items-end">
             {/* <ImageUpload /> */}{" "}
-            <Textarea placeholder="Describe your ingredient." />
+            <Textarea
+              className="resize-y border min-h-39 border-[#E4E4E7]"
+              rows={4}
+              cols={100}
+              placeholder="Describe your ingredient."
+            />
             <Button className="cursor-pointer hover: bg-gray-500 hover:text-[##18181B] text-[#FAFAFA]">
               Generate
             </Button>

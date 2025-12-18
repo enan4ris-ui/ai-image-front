@@ -24,7 +24,10 @@ export function ImageCreator() {
             What food image do you want? Describe it briefly.
           </p>
           <div className="flex-col flex gap-2 items-end">
-            <Textarea placeholder="Food description." />
+            <Textarea
+              className="resize-y border min-h-39 border-[#E4E4E7]"
+              placeholder="Food description."
+            />
             {/* <ImageUpload /> */}
             <Button className="cursor-pointer hover: bg-gray-500 hover:text-[##18181B] text-[#FAFAFA]">
               Generate

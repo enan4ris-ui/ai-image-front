@@ -1,9 +1,9 @@
+import React, { ChangeEvent, useState } from "react";
 import { Sparkley } from "../../../public/sparkley";
 import { Button } from "@/components/ui/button";
 import { Document } from "../../../public/document";
 import { Reload } from "../../../public/reload";
 import ImageUpload from "../_components/imageUpload";
-// import ImageUpload from "../_components/imageUpload";
 
 export function ImageAnalysis() {
   return (

@@ -1,40 +1,36 @@
-// import { ChangeEvent, useState } from "react";
-
-// export default function ImageUpload() {
-//   const [file, setFile] = useState<File | null>(null);
-//   const [imageSrc, setImageSrc] = useState("");
-
-//   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-//     if (e.target.files) {
-//       setFile(e.target.files[0]);
-//       setImageSrc(URL.createObjectURL(e.target.files[0]));
-//     }
-//   }
-
-//   return (
-//     <div className="space-y-2">
-//       <input type="file" className="text-[14px]" onChange={handleFileChange} />
-//       {imageSrc && (
-//         <div className="mb-2 text-sm">
-//           <img
-//             src={imageSrc}
-//             alt="Uploaded preview"
-//             style={{ maxWidth: "208px", maxHeight: "141px" }}
-//           />
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
 import React, { useState, ChangeEvent } from "react";
 import { Delete } from "../../../public/delete";
+import axios from "axios";
+
+interface Props {
+  onFileSelect: (file: File | null, preview: string | null) => void;
+}
+
 const ImageUploader: React.FC = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+
+    formData.append("image", file);
+
+    try {
+      setIsUploading(true);
+
+      const response = axios.post(
+        "http://localhost:168/image-analysis",
+        formData
+      );
+
+      alert("Data saved successfully!");
+    } catch (error) {
+      console.error("Network or unexpected front-end error:", error);
+      alert("A network error occurred. Please check your connection.");
+    }
 
     if (file) {
       setIsUploading(true);
@@ -58,7 +54,7 @@ const ImageUploader: React.FC = () => {
   };
 
   return (
-    <div className="rounded-md border border-gray-300 flex justify-start">
+    <div className="rounded-md  border-gray-300  flex justify-start">
       {imageSrc ? (
         <div className="image-preview-section">
           <img
@@ -75,6 +71,7 @@ const ImageUploader: React.FC = () => {
           <input
             id="file-input"
             type="file"
+            className="text-[14px] text-[#09090B]"
             accept="image/*"
             onChange={handleImageChange}
             disabled={isUploading}
