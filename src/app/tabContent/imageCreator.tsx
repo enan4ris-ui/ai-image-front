@@ -14,19 +14,19 @@ export function ImageCreator() {
           <div className="flex justify-between w-145">
             <div className="flex items-center gap-2">
               <Sparkley />
-              <p>Food image creator</p>
+              <p>Image creator</p>
             </div>
             <div className="w-12 h-10 border border-[#E4E4E7] rounded-md flex justify-center items-center">
               <Reload />
             </div>
           </div>
           <p className="text-[#71717A] font-normal text-[14px]">
-            What food image do you want? Describe it briefly.
+            What image do you want? Describe it briefly.
           </p>
           <div className="flex-col flex gap-2 items-end">
             <Textarea
               className="resize-y border min-h-39 border-[#E4E4E7]"
-              placeholder="Food description."
+              placeholder="Image description."
             />
             {/* <ImageUpload /> */}
             <Button className="cursor-pointer hover: bg-gray-500 hover:text-[##18181B] text-[#FAFAFA]">

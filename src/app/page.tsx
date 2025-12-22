@@ -17,7 +17,7 @@ export default function Home() {
   const tabs = [
     { id: "tab1", label: "Image Analysis" },
     { id: "tab2", label: "Ingredient Recogniton" },
-    { id: "tab3", label: "Food Image Creator" },
+    { id: "tab3", label: "Image Creator" },
   ];
 
   const tabContent = {

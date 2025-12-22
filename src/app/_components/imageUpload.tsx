@@ -1,86 +1,81 @@
-import React, { useState, ChangeEvent } from "react";
-import { Delete } from "../../../public/delete";
-import axios from "axios";
+"use client";
 
-interface Props {
-  onFileSelect: (file: File | null, preview: string | null) => void;
-}
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Document } from "../../../public/document";
+// import uploadgif from ".gif";
 
-const ImageUploader: React.FC = () => {
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+export default function ImageUpload() {
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
 
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
-    const formData = new FormData();
+    setPreview(URL.createObjectURL(file));
 
+    const formData = new FormData();
     formData.append("image", file);
 
+    setLoading(true);
+    setResult("");
+
     try {
-      setIsUploading(true);
+      const response = await fetch("http://localhost:168/analyze-image", {
+        method: "POST",
+        body: formData,
+      });
 
-      const response = axios.post(
-        "http://localhost:168/image-analysis",
-        formData
-      );
-
-      alert("Data saved successfully!");
-    } catch (error) {
-      console.error("Network or unexpected front-end error:", error);
-      alert("A network error occurred. Please check your connection.");
-    }
-
-    if (file) {
-      setIsUploading(true);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageSrc(reader.result as string);
-        setIsUploading(false);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleRemoveImage = () => {
-    setImageSrc(null);
-    const inputElement = document.getElementById(
-      "file-input"
-    ) as HTMLInputElement;
-    if (inputElement) {
-      inputElement.value = "";
+      const data = await response.json();
+      setResult(data.description);
+      // console.log("result", result);
+    } catch (err) {
+      console.error(err);
+      console.log("Failed to analyze image");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="rounded-md  border-gray-300  flex justify-start">
-      {imageSrc ? (
-        <div className="image-preview-section">
-          <img
-            src={imageSrc}
-            alt="Uploaded preview"
-            style={{ maxWidth: "200px", maxHeight: "200px" }}
-          />
-          <button onClick={handleRemoveImage}>
-            <Delete />
-          </button>
+    <div>
+      <div className="flex-col flex gap-2 items-end">
+        <div className="space-y-4">
+          <label className="flex h-10 w-145 items-center px-3 py-2 border  rounded-md border-[#E4E4E7] font-medium text-[14px] cursor-pointer">
+            <p className="px-2">Choose file</p>
+            <p className="font-normal text-[#71717A]">JPG, PNG</p>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </label>
+          {preview && (
+            <div className="w-52 h-35.25 border-[#E4E4E7] rounded-lg border flex justify-center items-center">
+              <img
+                src={preview}
+                alt="preview"
+                className="w-50 h-33.25 rounded-lg"
+              />
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="image-upload-section">
-          <input
-            id="file-input"
-            type="file"
-            className="text-[14px] text-[#09090B]"
-            accept="image/*"
-            onChange={handleImageChange}
-            disabled={isUploading}
-          />
-          {isUploading && <p>Uploading...</p>}
+        <Button>Generate</Button>
+      </div>
+
+      <div className="h-41 flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <Document />
+          <p>Here is the summary</p>
         </div>
-      )}
+        <p className="text-[#71717A] font-normal text-[14px]">
+          First, enter your image to recognize an ingredients.
+        </p>
+        {result && <p> {result}</p>} {loading && <img src="/uploadgif.gif" />}
+      </div>
     </div>
   );
-};
-
-export default ImageUploader;
+}
