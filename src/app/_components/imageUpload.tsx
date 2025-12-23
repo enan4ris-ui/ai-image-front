@@ -29,10 +29,13 @@ export default function ImageUpload() {
     setResult("");
 
     try {
-      const response = await fetch("http://localhost:168/analyze-image", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://ai-image-back.onrender.com/analyze-image",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const data = await response.json();
       setResult(data.description);

@@ -20,9 +20,12 @@ export function ImageCreator() {
     try {
       setLoading(true);
 
-      const response = await axios.post("http://localhost:168/image-creator", {
-        input: prompt,
-      });
+      const response = await axios.post(
+        "https://ai-image-back.onrender.com/image-creator",
+        {
+          input: prompt,
+        }
+      );
       console.log(response);
       setResult(response.data.result);
     } catch (err) {
