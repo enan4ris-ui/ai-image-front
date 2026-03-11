@@ -1,14 +1,13 @@
-import { Sparkley } from "../../../public/sparkley";
-
-import { Reload } from "../../../public/reload";
+import { Sparkley } from "@/components/icons/Sparkley";
+import { Reload } from "@/components/icons/Reload";
 import ImageUpload from "../_components/imageUpload";
 
 export function ImageAnalysis() {
   return (
     <div className="flex flex-col items-center justify-start">
-      <div className="flex flex-col h-180 w-145  bg-[#FFF] gap-6 font-semibold text-[20px] py-6 items-start">
-        <div className="h-41 flex flex-col gap-2">
-          <div className="flex justify-between w-145">
+      <div className="flex flex-col h-[720px] w-[580px] bg-[#FFF] gap-6 font-semibold text-[20px] py-6 items-start">
+        <div className="h-[164px] flex flex-col gap-2">
+          <div className="flex justify-between w-[580px]">
             <div className="flex items-center gap-2">
               <Sparkley />
               <p>Image Analysis</p>
@@ -21,7 +20,7 @@ export function ImageAnalysis() {
             Upload a photo, and AI will detect the ingredients.
           </p>
           <div className="flex-col flex gap-2 ">
-            <div className="rounded-md  flex align-start justify-start">
+            <div className="rounded-md flex items-start justify-start">
               <ImageUpload />
             </div>
           </div>

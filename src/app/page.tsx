@@ -13,14 +13,14 @@ type Tab = {
 };
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("tab1");
-  const tabs = [
+  const [activeTab, setActiveTab] = useState<TabId>("tab1");
+  const tabs: Tab[] = [
     { id: "tab1", label: "Image Analysis" },
     { id: "tab2", label: "Image Creator" },
-    { id: "tab3", label: "Ingredient Recogniton" },
+    { id: "tab3", label: "Ingredient Recognition" },
   ];
 
-  const tabContent = {
+  const tabContent: Record<TabId, JSX.Element> = {
     tab1: <ImageAnalysis />,
     tab2: <ImageCreator />,
     tab3: <IngredientRecognition />,
@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-start pr-9 pb-9">
       <Header />
-      <div className="pt-6 w-145 h-111">
+      <div className="pt-6 w-[580px] h-[444px]">
         <div className="flex h-9 w-fit p-1 rounded-lg bg-[#F4F4F5]">
           {tabs.map((tab) => (
             <button

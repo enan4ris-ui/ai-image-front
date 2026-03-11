@@ -1,22 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Document } from "../../../public/document";
+import { Document } from "@/components/icons/Document";
 
 export default function ImageUpload() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [error, setError] = useState("");
+
+  const apiBaseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:168";
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
+    if (preview) URL.revokeObjectURL(preview);
     setFile(selectedFile);
     setPreview(URL.createObjectURL(selectedFile));
     setResult("");
+    setError("");
   };
 
   const handleGenerate = async () => {
@@ -27,20 +39,26 @@ export default function ImageUpload() {
 
     setLoading(true);
     setResult("");
+    setError("");
 
     try {
       const response = await fetch(
-        "https://ai-image-back.onrender.com/analyze-image",
+        `${apiBaseUrl}/analyze-image`,
         {
           method: "POST",
           body: formData,
         }
       );
 
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
       const data = await response.json();
       setResult(data.description);
     } catch (err) {
       console.error("Failed to analyze image", err);
+      setError("Image analysis failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -51,7 +69,7 @@ export default function ImageUpload() {
       <div className="flex-col flex gap-2  ">
         <div className="space-y-4">
           {!preview && (
-            <label className="flex h-10 w-145 items-center px-3 py-2 border rounded-md border-[#E4E4E7] font-medium text-[14px] cursor-pointer">
+            <label className="flex h-10 w-[580px] items-center px-3 py-2 border rounded-md border-[#E4E4E7] font-medium text-[14px] cursor-pointer">
               <p className="px-2">Choose file</p>
               <p className="font-normal text-[#71717A]">JPG, PNG</p>
               <input
@@ -64,27 +82,27 @@ export default function ImageUpload() {
           )}
 
           {preview && (
-            <div className="w-52 h-35.25 border-[#E4E4E7] rounded-lg border flex align-start justify-start">
+            <div className="w-52 h-[141px] border-[#E4E4E7] rounded-lg border flex items-start justify-start">
               <img
                 src={preview}
                 alt="preview"
-                className="w-50 h-33.25 rounded-lg flex align-start justify-start size-fit"
+                className="w-[200px] h-[133px] rounded-lg object-contain"
               />
             </div>
           )}
         </div>
       </div>
-      <div className="w-145 h-10 gap-2.5 flex align-end justify-end pt-2">
+      <div className="w-[580px] h-10 gap-2.5 flex items-end justify-end pt-2">
         <Button
           onClick={handleGenerate}
           disabled={!file || loading}
-          className="flex align-end justify-end cursor-pointer "
+          className="flex items-end justify-end cursor-pointer "
         >
           Generate
         </Button>
       </div>
 
-      <div className="h-41 flex flex-col gap-2">
+      <div className="h-[164px] flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <Document />
           <p>Here is the summary</p>
@@ -98,6 +116,9 @@ export default function ImageUpload() {
           <div className="flex justify-center py-8">
             <div className="animate-spin h-6 w-6 border-2 border-gray-300 border-t-black rounded-full" />
           </div>
+        )}
+        {!loading && error && (
+          <p className="text-sm text-red-600">{error}</p>
         )}
         {result && (
           <p className="font-sans font-normal not-italic text-sm border-2 round rounded-lg border-[#E4E4E7]">

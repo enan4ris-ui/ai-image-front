@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Sparkley } from "../../../public/sparkley";
+import { useState } from "react";
+import { Sparkley } from "@/components/icons/Sparkley";
 import { Button } from "@/components/ui/button";
-import { Reload } from "../../../public/reload";
+import { Reload } from "@/components/icons/Reload";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import axios from "axios";
@@ -11,26 +11,27 @@ import axios from "axios";
 export function ImageCreator() {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [image, setImage] = useState<string | null>(null);
   const [result, setResult] = useState("");
+  const [error, setError] = useState("");
 
-  useEffect(() => {}, [prompt]);
+  const apiBaseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:168";
 
   const handleGenerate = async () => {
     try {
       setLoading(true);
+      setError("");
 
       const response = await axios.post(
-        "https://ai-image-back.onrender.com/image-creator",
+        `${apiBaseUrl}/image-creator`,
         {
           input: prompt,
         }
       );
-      console.log(response);
       setResult(response.data.result);
     } catch (err) {
       console.error("Generation failed:", err);
-      setResult("failed:");
+      setError("Generation failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -38,9 +39,9 @@ export function ImageCreator() {
 
   return (
     <div className="flex flex-col items-center justify-start">
-      <div className="flex flex-col h-180 w-145 bg-[#FFF] gap-6 font-semibold text-[20px] py-6 items-start">
-        <div className="h-41 flex flex-col gap-2">
-          <div className="flex justify-between w-145">
+      <div className="flex flex-col h-[720px] w-[580px] bg-[#FFF] gap-6 font-semibold text-[20px] py-6 items-start">
+        <div className="h-[164px] flex flex-col gap-2">
+          <div className="flex justify-between w-[580px]">
             <div className="flex items-center gap-2">
               <Sparkley />
               <p>Image creator</p>
@@ -48,7 +49,8 @@ export function ImageCreator() {
             <button
               onClick={() => {
                 setPrompt("");
-                // setImage(null);
+                setResult("");
+                setError("");
               }}
               className="w-12 h-10 border border-[#E4E4E7] rounded-md flex justify-center items-center"
             >
@@ -76,7 +78,7 @@ export function ImageCreator() {
             </Button>
           </div>
 
-          <div className="h-41 flex flex-col gap-2">
+          <div className="h-[164px] flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <p>Result</p>
             </div>
@@ -91,6 +93,10 @@ export function ImageCreator() {
               <div className="flex justify-center py-8">
                 <div className="animate-spin h-6 w-6 border-2 border-gray-300 border-t-black rounded-full" />
               </div>
+            )}
+
+            {!loading && error && (
+              <p className="text-sm text-red-600">{error}</p>
             )}
 
             {result && (
