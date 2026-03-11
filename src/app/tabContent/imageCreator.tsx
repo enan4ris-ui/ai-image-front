@@ -15,19 +15,16 @@ export function ImageCreator() {
   const [error, setError] = useState("");
 
   const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:168";
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-imageback.onrender.com";
 
   const handleGenerate = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const response = await axios.post(
-        `${apiBaseUrl}/image-creator`,
-        {
-          input: prompt,
-        }
-      );
+      const response = await axios.post(`${apiBaseUrl}/image-creator`, {
+        input: prompt,
+      });
       setResult(response.data.result);
     } catch (err) {
       console.error("Generation failed:", err);

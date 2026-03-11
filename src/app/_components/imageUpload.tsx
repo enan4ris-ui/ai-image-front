@@ -12,7 +12,7 @@ export default function ImageUpload() {
   const [error, setError] = useState("");
 
   const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:168";
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-imageback.onrender.com";
 
   useEffect(() => {
     return () => {
@@ -42,13 +42,10 @@ export default function ImageUpload() {
     setError("");
 
     try {
-      const response = await fetch(
-        `${apiBaseUrl}/analyze-image`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch(`${apiBaseUrl}/analyze-image`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error("Request failed");
@@ -117,9 +114,7 @@ export default function ImageUpload() {
             <div className="animate-spin h-6 w-6 border-2 border-gray-300 border-t-black rounded-full" />
           </div>
         )}
-        {!loading && error && (
-          <p className="text-sm text-red-600">{error}</p>
-        )}
+        {!loading && error && <p className="text-sm text-red-600">{error}</p>}
         {result && (
           <p className="font-sans font-normal not-italic text-sm border-2 round rounded-lg border-[#E4E4E7]">
             {" "}

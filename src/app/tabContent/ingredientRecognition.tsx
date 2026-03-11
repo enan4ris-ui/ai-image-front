@@ -12,7 +12,7 @@ export function IngredientRecognition() {
   const [error, setError] = useState("");
 
   const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:168";
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-imageback.onrender.com";
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
