@@ -3,7 +3,7 @@ import Header from "./_features/header";
 import { ImageAnalysis } from "../app/tabContent/imageAnalysis";
 import { IngredientRecognition } from "./tabContent/ingredientRecognition";
 import { ImageCreator } from "./tabContent/imageCreator";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 type TabId = "tab1" | "tab2" | "tab3";
 
@@ -20,7 +20,7 @@ export default function Home() {
     { id: "tab3", label: "Ingredient Recognition" },
   ];
 
-  const tabContent: Record<TabId, JSX.Element> = {
+  const tabContent: Record<TabId, ReactNode> = {
     tab1: <ImageAnalysis />,
     tab2: <ImageCreator />,
     tab3: <IngredientRecognition />,
