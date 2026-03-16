@@ -11,8 +11,8 @@ export default function ImageUpload() {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState("");
 
-  const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-imageback.onrender.com";
+   const apiBaseUrl =
+   process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-imageback.onrender.com";
 
   useEffect(() => {
     return () => {
