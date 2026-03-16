@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "npm run lint && next build",
-    "start": "npm run dev",
-    "lint": "eslint"
+    "start": "next start",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@huggingface/transformers": "^3.8.1",
