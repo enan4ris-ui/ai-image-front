@@ -11,8 +11,8 @@ export default function ImageUpload() {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState("");
 
-   const apiBaseUrl =
-   process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-imageback.onrender.com";
+  const apiBaseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-imageback.onrender.com";
 
   useEffect(() => {
     return () => {
@@ -46,12 +46,16 @@ export default function ImageUpload() {
         method: "POST",
         body: formData,
       });
-
+      console.log("API response status:------", response.status);
       if (!response.ok) {
-        throw new Error("Request failed");
+        const text = await response.text();
+        throw new Error(
+          `Request failed: ${response.status} ${response.statusText} - ${text}`,
+        );
       }
 
       const data = await response.json();
+      console.log("API response:---=-------------", data);
       setResult(data.description);
     } catch (err) {
       console.error("Failed to analyze image", err);
