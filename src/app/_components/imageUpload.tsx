@@ -30,7 +30,7 @@ export default function ImageUpload({
   setError,
 }: ImageUploadProps) {
   const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-imageback.onrender.com";
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-image-back-1.onrender.com";
 
   useEffect(() => {
     return () => {
