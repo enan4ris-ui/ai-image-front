@@ -1,16 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Document } from "@/components/icons/Document";
 
-export default function ImageUpload() {
-  const [result, setResult] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-  const [error, setError] = useState("");
+type ImageUploadProps = {
+  result: string;
+  setResult: (result: string) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+  preview: string | null;
+  setPreview: (preview: string | null) => void;
+  file: File | null;
+  setFile: (file: File | null) => void;
+  error: string;
+  setError: (error: string) => void;
+};
 
+export default function ImageUpload({
+  result,
+  setResult,
+  loading,
+  setLoading,
+  preview,
+  setPreview,
+  file,
+  setFile,
+  error,
+  setError,
+}: ImageUploadProps) {
   const apiBaseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-imageback.onrender.com";
 

@@ -49,7 +49,7 @@ export function ImageCreator() {
                 setResult("");
                 setError("");
               }}
-              className="w-12 h-10 border border-[#E4E4E7] rounded-md flex justify-center items-center"
+              className="w-12 h-10 border border-[#E4E4E7] rounded-md flex justify-center items-center hover:bg-gray-50"
             >
               <Reload />
             </button>
