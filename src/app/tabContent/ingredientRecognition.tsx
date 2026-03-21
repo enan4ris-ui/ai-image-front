@@ -12,7 +12,8 @@ export function IngredientRecognition() {
   const [error, setError] = useState("");
 
   const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-image-back-5n54.onrender.com";
+    process.env.NEXT_PUBLIC_API_BASE_URL ??
+    "https://ai-image-back-2.onrender.com";
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -43,11 +44,11 @@ export function IngredientRecognition() {
 
   return (
     <div className="flex flex-col items-center justify-start">
-      <div className="flex flex-col h-[720px] w-[580px] bg-[#FFF] gap-6 font-semibold text-[20px] py-6 items-start">
+      <div className="flex flex-col h-[560px] w-[720px] bg-[#fdfaf6] border border-[#d8c3a8] shadow-sm rounded-xl gap-6 font-semibold text-[20px] py-6 items-center">
         <div className="h-[164px] flex flex-col gap-2">
           <div className="flex justify-between w-[580px]">
             <div className="flex items-center gap-2">
-              <Sparkley />
+              <Sparkley className="text-[#1f3b5b]" />
               <p>Ingredient recognition</p>
             </div>
             <button
@@ -56,19 +57,19 @@ export function IngredientRecognition() {
                 setResult("");
                 setError("");
               }}
-              className="w-12 h-10 border border-[#E4E4E7] rounded-md flex justify-center items-center hover:bg-gray-50"
+              className="w-12 h-10 border border-[#c9b49a] rounded-md flex justify-center items-center hover:bg-[#e7d5bf]"
             >
-              <Reload />
+              <Reload className="text-[#1f3b5b]" />
             </button>
           </div>
-          <p className="text-[#71717A] font-normal text-[14px]">
+          <p className="text-[#4a5a6b] font-normal text-[14px]">
             Describe the food, and AI will detect the ingredients.
           </p>
           <div className="flex-col flex gap-2 items-end">
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="resize-y border min-h-[156px] border-[#E4E4E7]"
+              className="resize-y border min-h-[156px] border-[#c9b49a] bg-[#fffaf3] focus-visible:ring-[#6b86a6]"
               rows={4}
               cols={100}
               placeholder="Describe your ingredient."
@@ -76,7 +77,7 @@ export function IngredientRecognition() {
             <Button
               onClick={handleGenerate}
               disabled={loading || !prompt}
-              className="cursor-pointer text-[#FAFAFA]"
+              className="cursor-pointer text-[#f7f3ee] bg-[#1f3b5b] hover:bg-[#24486f]"
             >
               Generate
             </Button>
@@ -84,11 +85,11 @@ export function IngredientRecognition() {
 
           <div className="h-[164px] flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <Document />
+              <Document className="text-[#1f3b5b]" />
               <p>Identified Ingredients</p>
             </div>
             {!loading && !result && !error && (
-              <p className="text-[#71717A] font-normal text-[14px]">
+              <p className="text-[#4a5a6b] font-normal text-[14px]">
                 First, enter your text to recognize ingredients.
               </p>
             )}
@@ -101,7 +102,7 @@ export function IngredientRecognition() {
               <p className="text-sm text-red-600">{error}</p>
             )}
             {!loading && result && (
-              <p className="text-sm text-[#71717A] whitespace-pre-wrap">
+              <p className="text-sm text-[#4a5a6b] whitespace-pre-wrap">
                 {result}
               </p>
             )}

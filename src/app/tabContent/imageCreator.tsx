@@ -5,7 +5,6 @@ import { Sparkley } from "@/components/icons/Sparkley";
 import { Button } from "@/components/ui/button";
 import { Reload } from "@/components/icons/Reload";
 import { Textarea } from "@/components/ui/textarea";
-import Image from "next/image";
 import axios from "axios";
 
 export function ImageCreator() {
@@ -15,20 +14,55 @@ export function ImageCreator() {
   const [error, setError] = useState("");
 
   const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-image-back-5n54.onrender.com";
+    process.env.NEXT_PUBLIC_API_BASE_URL ??
+    "https://ai-image-back-2.onrender.com";
 
   const handleGenerate = async () => {
     try {
       setLoading(true);
       setError("");
 
+      const cleanedPrompt = prompt.trim();
+      if (!cleanedPrompt) {
+        setError("Please enter a prompt before generating.");
+        return;
+      }
+
       const response = await axios.post(`${apiBaseUrl}/image-creator`, {
-        input: prompt,
+        input: cleanedPrompt,
+        prompt: cleanedPrompt,
       });
-      setResult(response.data.result);
+
+      const candidate =
+        response.data?.result ??
+        response.data?.url ??
+        response.data?.image ??
+        response.data?.data;
+
+      if (!candidate || typeof candidate !== "string") {
+        throw new Error("Unexpected response format from image-creator.");
+      }
+
+      const normalized = candidate.startsWith("data:")
+        ? candidate
+        : candidate.startsWith("http")
+          ? candidate
+          : `data:image/png;base64,${candidate}`;
+
+      setResult(normalized);
     } catch (err) {
       console.error("Generation failed:", err);
-      setError("Generation failed. Please try again.");
+      if (axios.isAxiosError(err)) {
+        const message =
+          err.response?.data?.error ??
+          err.response?.data?.message ??
+          err.message;
+        setError(message || "Generation failed. Please try again.");
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Generation failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -36,11 +70,11 @@ export function ImageCreator() {
 
   return (
     <div className="flex flex-col items-center justify-start">
-      <div className="flex flex-col h-[720px] w-[580px] bg-[#FFF] gap-6 font-semibold text-[20px] py-6 items-start">
-        <div className="h-[164px] flex flex-col gap-2">
+      <div className="flex flex-col h-[560px] w-[720px] bg-[#fdfaf6] border border-[#d8c3a8] shadow-sm rounded-xl gap-6 font-semibold text-[20px] py-6 items-center overflow-hidden">
+        <div className="w-[580px] flex flex-col gap-2">
           <div className="flex justify-between w-[580px]">
             <div className="flex items-center gap-2">
-              <Sparkley />
+              <Sparkley className="text-[#1f3b5b]" />
               <p>Image creator</p>
             </div>
             <button
@@ -49,13 +83,13 @@ export function ImageCreator() {
                 setResult("");
                 setError("");
               }}
-              className="w-12 h-10 border border-[#E4E4E7] rounded-md flex justify-center items-center hover:bg-gray-50"
+              className="w-12 h-10 border border-[#c9b49a] rounded-md flex justify-center items-center hover:bg-[#e7d5bf]"
             >
-              <Reload />
+              <Reload className="text-[#1f3b5b]" />
             </button>
           </div>
 
-          <p className="text-[#71717A] font-normal text-[14px]">
+          <p className="text-[#4a5a6b] font-normal text-[14px]">
             What image do you want? Describe it briefly.
           </p>
 
@@ -63,25 +97,25 @@ export function ImageCreator() {
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="resize-y border min-h-[156px] border-[#E4E4E7]"
+              className="resize-y border min-h-[156px] border-[#c9b49a] bg-[#fffaf3] focus-visible:ring-[#6b86a6]"
               placeholder="Image description."
             />
             <Button
               disabled={loading || !prompt}
               onClick={handleGenerate}
-              className="text-[#FAFAFA] cursor-pointer"
+              className="text-[#f7f3ee] bg-[#1f3b5b] hover:bg-[#24486f] cursor-pointer"
             >
               {loading ? "Generating..." : "Generate"}
             </Button>
           </div>
 
-          <div className="h-[164px] flex flex-col gap-2">
+          <div className="flex flex-col gap-2 max-h-[220px] overflow-auto">
             <div className="flex items-center gap-2">
               <p>Result</p>
             </div>
 
             {!loading && !result && (
-              <p className="text-[#71717A] font-normal text-[14px]">
+              <p className="text-[#4a5a6b] font-normal text-[14px]">
                 First, enter your text to generate an image.
               </p>
             )}
@@ -98,13 +132,11 @@ export function ImageCreator() {
 
             {result && (
               <div className="flex flex-col gap-2">
-                <p className="text-sm text-[#71717A]">{prompt}</p>
-                <Image
+                <p className="text-sm text-[#4a5a6b]">{prompt}</p>
+                <img
                   src={result}
                   alt="Generated"
-                  width={230}
-                  height={360}
-                  className="rounded-lg border object-contain"
+                  className="w-[230px] h-auto max-h-[200px] rounded-lg border border-[#c9b49a] object-contain bg-[#fffaf3]"
                 />
               </div>
             )}

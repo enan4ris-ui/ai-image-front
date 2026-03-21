@@ -22,21 +22,21 @@ export function ImageAnalysis() {
 
   return (
     <div className="flex flex-col items-center justify-start">
-      <div className="flex flex-col h-[720px] w-[580px] bg-[#FFF] gap-6 font-semibold text-[20px] py-6 items-start">
+      <div className="flex flex-col h-[560px] w-[720px] bg-[#fdfaf6] border border-[#d8c3a8] shadow-sm rounded-xl gap-6 font-semibold text-[20px] py-6 items-center">
         <div className="h-[164px] flex flex-col gap-2">
           <div className="flex justify-between w-[580px]">
             <div className="flex items-center gap-2">
-              <Sparkley />
+              <Sparkley className="text-[#1f3b5b]" />
               <p>Image Analysis</p>
             </div>
             <button
               onClick={handleReset}
-              className="w-12 h-10 border border-[#E4E4E7] rounded-md flex justify-center items-center hover:bg-gray-50"
+              className="w-12 h-10 border border-[#c9b49a] rounded-md flex justify-center items-center hover:bg-[#e7d5bf]"
             >
-              <Reload />
+              <Reload className="text-[#1f3b5b]" />
             </button>
           </div>
-          <p className="text-[#71717A] font-normal text-[14px]">
+          <p className="text-[#4a5a6b] font-normal text-[14px]">
             Upload a photo, and AI will detect the ingredients.
           </p>
           <div className="flex-col flex gap-2 ">

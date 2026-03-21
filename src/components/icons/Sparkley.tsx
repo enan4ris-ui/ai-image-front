@@ -9,7 +9,7 @@ export const Sparkley = (props: React.SVGProps<SVGSVGElement>) => (
     {...props}
   >
     <path
-      stroke="#09090B"
+      stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}

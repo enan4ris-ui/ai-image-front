@@ -26,18 +26,18 @@ export default function Home() {
     tab3: <IngredientRecognition />,
   };
   return (
-    <div className="flex flex-col items-center justify-start pr-9 pb-9">
+    <div className="min-h-screen w-full bg-[linear-gradient(135deg,#f4efe9_0%,#e7eef5_100%)] flex flex-col items-center justify-start pr-9 pb-9 text-[#243447]">
       <Header />
-      <div className="pt-6 w-[580px] h-[444px]">
-        <div className="flex h-9 w-fit p-1 rounded-lg bg-[#F4F4F5]">
+      <div className="pt-6 w-[720px] h-auto">
+        <div className="flex h-9 w-fit p-1 rounded-lg bg-[#e6d6c3] shadow-sm border border-[#c9b49a]">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               className={`inline-flex px-3 py-1 rounded-md text-[12px] font-medium transition-colors
     ${
       activeTab === tab.id
-        ? "bg-white text-black "
-        : "bg-transparent text-muted-foreground hover:bg-white/60"
+        ? "bg-[#1f3b5b] text-[#f7f3ee] shadow"
+        : "bg-transparent text-[#3e4a5a] hover:bg-[#d7c1a6]"
     }`}
               onClick={() => setActiveTab(tab.id)}
             >

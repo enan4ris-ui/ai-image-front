@@ -30,7 +30,8 @@ export default function ImageUpload({
   setError,
 }: ImageUploadProps) {
   const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://ai-image-back-5n54.onrender.com";
+    process.env.NEXT_PUBLIC_API_BASE_URL ??
+    "https://ai-image-back-2.onrender.com";
 
   useEffect(() => {
     return () => {
@@ -42,11 +43,45 @@ export default function ImageUpload({
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
-    if (preview) URL.revokeObjectURL(preview);
-    setFile(selectedFile);
-    setPreview(URL.createObjectURL(selectedFile));
-    setResult("");
-    setError("");
+    const updateWithFile = (nextFile: File) => {
+      if (preview) URL.revokeObjectURL(preview);
+      setFile(nextFile);
+      setPreview(URL.createObjectURL(nextFile));
+      setResult("");
+      setError("");
+    };
+
+    const convertToPng = async (inputFile: File) => {
+      try {
+        const objectUrl = URL.createObjectURL(inputFile);
+        const image = new Image();
+        const loaded = new Promise<void>((resolve, reject) => {
+          image.onload = () => resolve();
+          image.onerror = () => reject(new Error("Failed to load image"));
+        });
+        image.src = objectUrl;
+        await loaded;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) throw new Error("Failed to get canvas context");
+        ctx.drawImage(image, 0, 0);
+
+        const blob: Blob | null = await new Promise((resolve) =>
+          canvas.toBlob((b) => resolve(b), "image/png"),
+        );
+        URL.revokeObjectURL(objectUrl);
+        if (!blob) throw new Error("Failed to convert image");
+        const pngFile = new File([blob], "upload.png", { type: "image/png" });
+        updateWithFile(pngFile);
+      } catch (err) {
+        console.error("Image conversion failed, using original.", err);
+        if (selectedFile) updateWithFile(selectedFile);
+      }
+    };
+    void convertToPng(selectedFile);
   };
 
   const handleGenerate = async () => {
@@ -54,7 +89,6 @@ export default function ImageUpload({
 
     const formData = new FormData();
     formData.append("file", file);
-
     setLoading(true);
     setResult("");
     setError("");
@@ -71,7 +105,6 @@ export default function ImageUpload({
           `Request failed: ${response.status} ${response.statusText} - ${text}`,
         );
       }
-
       const data = await response.json();
       console.log("API response:---=-------------", data);
       setResult(data.description);
@@ -88,9 +121,9 @@ export default function ImageUpload({
       <div className="flex-col flex gap-2  ">
         <div className="space-y-4">
           {!preview && (
-            <label className="flex h-10 w-[580px] items-center px-3 py-2 border rounded-md border-[#E4E4E7] font-medium text-[14px] cursor-pointer">
+            <label className="flex h-10 w-[580px] items-center px-3 py-2 border rounded-md border-[#c9b49a] bg-[#fffaf3] font-medium text-[14px] cursor-pointer">
               <p className="px-2">Choose file</p>
-              <p className="font-normal text-[#71717A]">JPG, PNG</p>
+              <p className="font-normal text-[#4a5a6b]">JPG, PNG</p>
               <input
                 type="file"
                 accept="image/*"
@@ -99,9 +132,8 @@ export default function ImageUpload({
               />
             </label>
           )}
-
           {preview && (
-            <div className="w-52 h-[141px] border-[#E4E4E7] rounded-lg border flex items-start justify-start">
+            <div className="w-52 h-[141px] border-[#c9b49a] rounded-lg border flex items-start justify-start bg-[#fffaf3]">
               <img
                 src={preview}
                 alt="preview"
@@ -115,19 +147,18 @@ export default function ImageUpload({
         <Button
           onClick={handleGenerate}
           disabled={!file || loading}
-          className="flex items-end justify-end cursor-pointer "
+          className="flex items-end justify-end cursor-pointer text-[#f7f3ee] bg-[#1f3b5b] hover:bg-[#24486f]"
         >
           Generate
         </Button>
       </div>
-
       <div className="h-[164px] flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <Document />
+          <Document className="text-[#1f3b5b]" />
           <p>Here is the summary</p>
         </div>
         {!result && !loading && (
-          <p className="font-sans font-normal not-italic text-sm text-[#09090B]">
+          <p className="font-sans font-normal not-italic text-sm text-[#4a5a6b]">
             First, enter your image to recognize an ingredients.
           </p>
         )}
@@ -138,7 +169,7 @@ export default function ImageUpload({
         )}
         {!loading && error && <p className="text-sm text-red-600">{error}</p>}
         {result && (
-          <p className="font-sans font-normal not-italic text-sm border-2 round rounded-lg border-[#E4E4E7]">
+          <p className="font-sans font-normal not-italic text-sm border-2 round rounded-lg border-[#c9b49a] bg-[#fffaf3]">
             {" "}
             {result}
           </p>
